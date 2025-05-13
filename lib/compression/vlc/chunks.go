@@ -11,7 +11,7 @@ type BinaryChunk string
 
 type BinaryChunks []BinaryChunk
 
-const hexChunkSeparator = " "
+const chunksSize = " "
 
 func NewBinChunks(data []byte) BinaryChunks {
 	res := make(BinaryChunks, 0, len(data))

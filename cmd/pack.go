@@ -3,6 +3,7 @@ package cmd
 import (
 	"archivist/lib/compression"
 	"archivist/lib/compression/vlc"
+	"archivist/lib/compression/vlc/table/shannon_fano"
 	"errors"
 	"github.com/spf13/cobra"
 	"io"
@@ -17,7 +18,7 @@ var packcmd = &cobra.Command{
 	Run:   pack,
 }
 
-const packedExtension = "vlc"
+const packedExtension = "shm"
 
 var ErrEmptyPath = errors.New("path to file is not specified")
 
@@ -31,8 +32,8 @@ func pack(cmd *cobra.Command, args []string) {
 	method := cmd.Flag("method").Value.String()
 
 	switch method {
-	case "vlc":
-		encode = vlc.New()
+	case "sh":
+		encode = vlc.New(shannon_fano.NewGenerator())
 	default:
 		cmd.PrintErr("unknown method")
 	}
@@ -44,8 +45,6 @@ func pack(cmd *cobra.Command, args []string) {
 		handleErr(err)
 	}
 	defer r.Close()
-
-	//var w io.Writer
 
 	data, err := io.ReadAll(r)
 	if err != nil {

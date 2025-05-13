@@ -3,6 +3,7 @@ package cmd
 import (
 	"archivist/lib/compression"
 	"archivist/lib/compression/vlc"
+	"archivist/lib/compression/vlc/table/shannon_fano"
 	"github.com/spf13/cobra"
 	"io"
 	"os"
@@ -28,8 +29,8 @@ func unpack(cmd *cobra.Command, args []string) {
 	method := cmd.Flag("method").Value.String()
 
 	switch method {
-	case "vlc":
-		decode = vlc.New()
+	case "sh":
+		decode = vlc.New(shannon_fano.NewGenerator())
 	default:
 		cmd.PrintErr("unknown method")
 	}
