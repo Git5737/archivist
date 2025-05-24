@@ -1,4 +1,4 @@
-# Arhivist 💾
+# Archivist 💾
 Archivist is a command-line tool written in Go for archiving and unarchiving files and directories. It supports multiple compression formats, including ZIP, TAR, TAR.GZ, TAR.BZ2, and TAR.XZ, with automatic format detection for unpacking.
 
 ## Installation ⬇️
@@ -11,7 +11,7 @@ Archivist is a command-line tool written in Go for archiving and unarchiving fil
    go mod tidy
 3. Build the binary:
    ```bash
-   go build -o archivist
+   go build -o archivist 
 4. (Recommended/Optional) Move the bivary to a directory in your PATH:
    ```bash
    mv archivist /usr/local/bin/
@@ -21,13 +21,13 @@ Archivist provides two main commands: pack to create archives and unpack to extr
 ### Packing Files or Directories
 Create an archive from files or directory
 ```bash
-arhivist pack -m <format> <file>
+archivist pack -m <format> <file>
 ```
 -m: Compression format (zip, tar, targ.gz, tar.bz, tar.xz)
 
 ### Example
 ```bash
-arhivist pack -m zip my_folder
+archivist pack -m zip my_folder
 ```
 ### Unpacking Archive
 ```bash
