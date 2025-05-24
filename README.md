@@ -14,7 +14,7 @@ Archivist is a command-line tool written in Go for archiving and unarchiving fil
    go build -o archivist 
 4. (Recommended/Optional) Move the bivary to a directory in your PATH:
    ```bash
-   mv archivist /usr/local/bin/
+   sudo mv archivist /usr/local/bin/
 
 ## Usage 📊
 Archivist provides two main commands: pack to create archives and unpack to extract them.
