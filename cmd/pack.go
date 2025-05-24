@@ -2,12 +2,13 @@ package cmd
 
 import (
 	"archivist/lib/compression"
-	"archivist/lib/compression/vlc"
-	"archivist/lib/compression/vlc/table/shannon_fano"
+	tar2 "archivist/lib/compression/tar"
+	"archivist/lib/compression/tar_bz2"
+	"archivist/lib/compression/tar_gz"
+	"archivist/lib/compression/tar_xz"
+	"archivist/lib/compression/zip"
 	"errors"
 	"github.com/spf13/cobra"
-	"io"
-	"os"
 	"path/filepath"
 	"strings"
 )
@@ -18,48 +19,44 @@ var packcmd = &cobra.Command{
 	Run:   pack,
 }
 
-const packedExtension = "shm"
-
 var ErrEmptyPath = errors.New("path to file is not specified")
 
 func pack(cmd *cobra.Command, args []string) {
-	var encode compression.Encoder
+	filePath := args[0]
 
 	if len(args) == 0 || args[0] == "" {
 		handleErr(ErrEmptyPath)
 	}
 
+	var encode compression.Encoder
+
 	method := cmd.Flag("method").Value.String()
 
+	packedName := packedFileName(filePath, method)
+
 	switch method {
-	case "sh":
-		encode = vlc.New(shannon_fano.NewGenerator())
+	case "zip":
+		encode = zip.New(packedName)
+	case "tar":
+		encode = tar2.New(packedName)
+	case "tar.gz":
+		encode = tar_gz.New(packedName)
+	case "tar.xz":
+		encode = tar_xz.New(packedName)
+	case "tar.bz":
+		encode = tar_bz2.New(packedName)
+
 	default:
 		cmd.PrintErr("unknown method")
 	}
 
-	filePath := args[0]
-
-	r, err := os.Open(filePath)
-	if err != nil {
-		handleErr(err)
-	}
-	defer r.Close()
-
-	data, err := io.ReadAll(r)
-	if err != nil {
-		handleErr(err)
-	}
-
-	packed := encode.Encode(string(data))
-
-	err = os.WriteFile(packedFileName(filePath), packed, 0644)
+	err := encode.Encode([]string{filePath})
 	if err != nil {
 		handleErr(err)
 	}
 }
 
-func packedFileName(path string) string {
+func packedFileName(path string, packedExtension string) string {
 	fileName := filepath.Base(path)
 
 	return strings.TrimSuffix(fileName, filepath.Ext(fileName)) + "." + packedExtension

@@ -1,9 +1,9 @@
 package compression
 
 type Encoder interface {
-	Encode(str string) []byte
+	Encode(sourcePaths []string) error
 }
 
 type Decoder interface {
-	Decode(data []byte) string
+	Decode(outputDir string) error
 }
